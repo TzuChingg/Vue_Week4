@@ -9,9 +9,9 @@ const app = createApp({
             api_Url: 'https://ec-course-api.hexschool.io/v2',
             api_Path: 'chinging',
             products: [], 
-            // modalProduct: {
-            //     imagesUrl:[]
-            // },
+            modalProduct: {
+                imagesUrl:[]
+            },
             newModalProduct: {},
             state: ''
         }
@@ -42,8 +42,8 @@ const app = createApp({
                 this.modalProduct = {}
                 productModal.show()
             }else if (state === 'edit'){
-                // this.state = state
-                // this.modalProduct = item
+                this.state = state
+                this.modalProduct = item
                 productModal.show()
             }else if (state === 'del'){
                 this.modalProduct = item
@@ -92,24 +92,23 @@ const app = createApp({
 
 
 app.component('productModal',{
+    props:['tempProduct'],
     template: '#productModal',
     data() {
         return {
-            modalProduct:{
-                imagesUrl:[]
-            }
+
         }
     },
     mounted() {
-        productModal = new bootstrap.Modal(document.getElementById('productModal'),{
+        productModal = new bootstrap.Modal(document.getElementById('editProduct'),{
             keyboard: false,
             // backdrop: 'static'
         })
     },
     methods: {
-        openModal() {
-            productModal.show();
-          },
+        // openModal() {
+        //     productModal.show();
+        //   },
     },
 });
 
