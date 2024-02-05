@@ -43,10 +43,10 @@ const app = createApp({
                 productModal.show()
             }else if (state === 'edit'){
                 this.state = state
-                this.modalProduct = item
+                this.modalProduct = JSON.parse(JSON.stringify(item))
                 productModal.show()
             }else if (state === 'del'){
-                this.modalProduct = item
+                this.modalProduct = JSON.parse(JSON.stringify(item))
                 delProductModal.show()
             }
         },
@@ -92,7 +92,7 @@ const app = createApp({
 
 
 app.component('productModal',{
-    props:['tempProduct'],
+    props:['tempProduct', 'state'],
     template: '#productModal',
     data() {
         return {
@@ -109,6 +109,28 @@ app.component('productModal',{
         // openModal() {
         //     productModal.show();
         //   },
+        createImages(){
+            this.tempProduct.imagesUrl = [];
+            this.tempProduct.imagesUrl.push('');
+        },
+        updateProduct(){
+            let url = `${this.api_Url}/api/${this.api_Path}/admin/product`;
+            let way = 'post';
+            console.log(url);
+            // if (this.state !== 'isNew') {
+            //   url = `${this.api_Url}/api/${this.api_Path}/admin/product/${this.tempProduct.id}`;
+            //   way = 'put'
+            // }
+      
+            // axios[way](url, { data: this.tempProduct }).then((response) => {
+            //   alert(response.data.message);
+            //   productModal.hide();
+            // //   this.getProducts();
+            // }).catch((err) => {
+            //   alert(err.response.data.message);
+            // })
+            // console.log('產品更新');
+        },
     },
 });
 

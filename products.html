@@ -67,7 +67,7 @@
           </div>
         </div>
       </div>
-      <product-modal :temp-product="modalProduct"></product-modal>
+      <product-modal :temp-product="modalProduct" :state="state"></product-modal>
     </div>
     <!-- Modal -->
     <script type="text/x-template" id="productModal">
@@ -84,12 +84,14 @@
               <h5
                 class="modal-title text-light"
                 id="editProductModalLabel"
+                v-if="state == 'edit'"
               >
                 編輯資料
               </h5>
               <h5
                 class="modal-title text-light"
                 id="editProductModalLabel"
+                v-else
               >
                 新增資料
               </h5>
@@ -121,9 +123,9 @@
                   </div>
                   <h3>多圖新增</h3>
                   <!-- 判斷點開的modalProduct.imagesUrl是不是陣列，是陣列顯示下方程式碼 -->
-                  <div v-if="Array.is">
+                  <div v-if="Array.isArray(tempProduct.imagesUrl)">
                     <!-- 用v-for將modalProduct.imagesUrl陣列內的值取出，並渲染到畫面上 -->
-                    <div class="mb-1">
+                    <div class="mb-1" v-for="(item, index) in tempProduct.imagesUrl" :key="index">
                       <div class="mb-3">
                         <label class="form-label"
                           >圖片網址</label
@@ -132,32 +134,36 @@
                           type="text"
                           class="form-control"
                           placeholder="請輸入圖片連結"
+                          v-model="item"
                         />
                       </div>
-                      <img class="img-fluid" />
+                      <img class="img-fluid"
+                      :src="item">
                     </div>
                     <!-- 如果modalProduct.imagesUrl.length的長度不等於0，顯示新增圖片 -->
-                    <div>
+                    <div  v-if="!tempProduct.imagesUrl.length || tempProduct.imagesUrl[tempProduct.imagesUrl.length - 1]"  >
                       <button
                         class="btn btn-outline-primary btn-sm d-block w-100"
+                        @click="tempProduct.imagesUrl.push('')"
                       >
                         <!-- 點擊後陣列中新增空值 -->
                         新增圖片
                       </button>
                     </div>
-                    <div>
-                      <button
+                    <div v-else>
+                      <button 
                         class="btn btn-outline-danger btn-sm d-block w-100"
-                        @click="modalProduct.imagesUrl.pop()"
+                        @click="tempProduct.imagesUrl.pop()"
                       >
                         刪除圖片
                       </button>
                     </div>
                   </div>
                   <!-- 不是陣列，顯示button -->
-                  <div>
+                  <div v-else>
                     <button
                       class="btn btn-outline-primary btn-sm d-block w-100"
+                      @click="createImages"
                     >
                       新增圖片
                     </button>
@@ -250,9 +256,10 @@
                         :true-value="1"
                         :false-value="0"
                       />
-                      <label class="form-check-label" for="productIsEnable"
-                        >是否啟用</label
+                      <label class="form-check-label text-success" for="productIsEnable" v-if="tempProduct.is_enabled"
+                        >啟用</label
                       >
+                      <label class="form-check-label" for="productIsEnable" v-else>未啟用</label>
                     </div>
                   </div>
                 </div>
@@ -269,6 +276,7 @@
               <button
                 type="button"
                 class="btn btn-primary"
+                @click="updateProduct"
               >
                 確認
               </button>
