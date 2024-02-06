@@ -13,7 +13,8 @@ const app = createApp({
                 imagesUrl:[]
             },
             newModalProduct: {},
-            state: ''
+            state: '',
+            totalPages: 0
         }
     },
     methods: {
@@ -28,9 +29,10 @@ const app = createApp({
                 });
         },
         getProducts(){
-            axios.get(`${this.api_Url}/api/${this.api_Path}/admin/products/all`)
+            axios.get(`${this.api_Url}/api/${this.api_Path}/admin/products?page=1`)
                 .then((res) => {
                     this.products = res.data.products
+                    this.totalPages = res.data.pagination
                     console.log('getProducts');
                 }).catch((err) => {
                     alert(err.response.data.message);
@@ -125,6 +127,11 @@ app.component('delProductModal', {
             });
         }
     },
+})
+
+app.component('pagination', {
+    template: '#pagination',
+    props: ['pages'],
 })
 
 app.mount('#app')
