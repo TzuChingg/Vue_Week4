@@ -67,7 +67,8 @@
           </div>
         </div>
       </div>
-      <product-modal :temp-product="modalProduct" :state="state"></product-modal>
+      <product-modal :temp-product="modalProduct" :state="state" @update-product="getProducts"></product-modal>
+      <del-product-modal :temp-product="modalProduct" @update-product="getProducts"></del-product-modal>
     </div>
     <!-- Modal -->
     <script type="text/x-template" id="productModal">
@@ -309,7 +310,7 @@
             <div class="modal-body">
               <p>
                 是否刪除
-                <span class="text-danger"></span>
+                <span class="text-danger">{{ tempProduct.title }}</span>
                 商品(刪除後將無法恢復)。
               </p>
             </div>
@@ -321,7 +322,7 @@
               >
                 取消
               </button>
-              <button type="button" class="btn btn-danger" >
+              <button type="button" class="btn btn-danger" @click="delProduct">
                 確認刪除
               </button>
             </div>

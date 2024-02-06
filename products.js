@@ -50,39 +50,6 @@ const app = createApp({
                 delProductModal.show()
             }
         },
-        // updateProduct(){
-        //     let url = `${this.api_Url}/api/${this.api_Path}/admin/product`;
-        //     let way = 'post';
-      
-        //     if (this.state !== 'isNew') {
-        //       url = `${this.api_Url}/api/${this.api_Path}/admin/product/${this.modalProduct.id}`;
-        //       way = 'put'
-        //     }
-      
-        //     axios[way](url, { data: this.modalProduct }).then((response) => {
-        //       alert(response.data.message);
-        //       productModal.hide();
-        //       this.getProducts();
-        //     }).catch((err) => {
-        //       alert(err.response.data.message);
-        //     })
-        //     console.log('產品更新');
-        // },
-        // delProduct(){
-        //     axios.delete(`${this.api_Url}/api/${this.api_Path}/admin/product/${this.modalProduct.id}`)
-        //     .then((result) => {
-        //         console.log(this.modalProduct.id);
-        //         alert(result.data.message)
-        //         delProductModal.hide()
-        //         this.getProducts()
-        //     }).catch((err) => {
-        //         alert(err.response.data.message);
-        //     });
-        // },
-        // createImages(){
-        //     this.modalProduct.imagesUrl = [];
-        //     this.modalProduct.imagesUrl.push('');
-        // }
     },
     mounted() {
         axios.defaults.headers.common['Authorization'] = document.cookie.split('=')[1]
@@ -96,7 +63,8 @@ app.component('productModal',{
     template: '#productModal',
     data() {
         return {
-
+            api_Url: 'https://ec-course-api.hexschool.io/v2',
+            api_Path: 'chinging',
         }
     },
     mounted() {
@@ -116,22 +84,47 @@ app.component('productModal',{
         updateProduct(){
             let url = `${this.api_Url}/api/${this.api_Path}/admin/product`;
             let way = 'post';
-            console.log(url);
-            // if (this.state !== 'isNew') {
-            //   url = `${this.api_Url}/api/${this.api_Path}/admin/product/${this.tempProduct.id}`;
-            //   way = 'put'
-            // }
+            if (this.state !== 'isNew') {
+              url = `${this.api_Url}/api/${this.api_Path}/admin/product/${this.tempProduct.id}`;
+              way = 'put'
+            }
       
-            // axios[way](url, { data: this.tempProduct }).then((response) => {
-            //   alert(response.data.message);
-            //   productModal.hide();
-            // //   this.getProducts();
-            // }).catch((err) => {
-            //   alert(err.response.data.message);
-            // })
-            // console.log('產品更新');
+            axios[way](url, { data: this.tempProduct }).then((response) => {
+              alert(response.data.message);
+              productModal.hide();
+              this.$emit('updateProduct')
+            }).catch((err) => {
+              alert(err.response.data.message);
+            })
+            console.log('產品更新');
         },
     },
 });
+
+app.component('delProductModal', {
+    props:['tempProduct'],
+    template:'#delProductModal',
+    data() {
+        return {
+            api_Url: 'https://ec-course-api.hexschool.io/v2',
+            api_Path: 'chinging',
+        }
+    },
+    mounted() {
+        delProductModal = new bootstrap.Modal(document.getElementById('delProduct'))
+    },
+    methods: {
+        delProduct(){
+            axios.delete(`${this.api_Url}/api/${this.api_Path}/admin/product/${this.tempProduct.id}`)
+            .then((result) => {
+                alert(result.data.message)
+                delProductModal.hide()
+                this.$emit('updateProduct')
+            }).catch((err) => {
+                alert(err.response.data.message);
+            });
+        }
+    },
+})
 
 app.mount('#app')
