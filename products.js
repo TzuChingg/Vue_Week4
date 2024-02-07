@@ -49,7 +49,7 @@ const app = createApp({
                 this.modalProduct = JSON.parse(JSON.stringify(item))
                 productModal.show()
             }else if (state === 'del'){
-                this.modalProduct = JSON.parse(JSON.stringify(item))
+                this.modalProduct = item
                 delProductModal.show()
             }
         },
@@ -137,8 +137,14 @@ app.component('delProductModal', {
 app.component('pagination', {
     props: ['pages'],
     template: '#pagination',
+    data() {
+        return {
+            tempPage: 1
+        }
+    },
     methods: {
         changePage(page){
+            this.tempPage = page
             this.$emit('changePage', page)
         }
     },
