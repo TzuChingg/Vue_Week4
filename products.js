@@ -14,7 +14,8 @@ const app = createApp({
             },
             newModalProduct: {},
             state: '',
-            totalPages: 0
+            totalPages: 0,
+            page: 1
         }
     },
     methods: {
@@ -29,10 +30,10 @@ const app = createApp({
                 });
         },
         getProducts(){
-            axios.get(`${this.api_Url}/api/${this.api_Path}/admin/products?page=1`)
+            axios.get(`${this.api_Url}/api/${this.api_Path}/admin/products?page=${this.page}`)
                 .then((res) => {
                     this.products = res.data.products
-                    this.totalPages = res.data.pagination
+                    this.totalPages = res.data.pagination.total_pages
                     console.log('getProducts');
                 }).catch((err) => {
                     alert(err.response.data.message);
@@ -52,6 +53,10 @@ const app = createApp({
                 delProductModal.show()
             }
         },
+        changePage(page){
+            this.page = page;
+            this.getProducts();
+        }
     },
     mounted() {
         axios.defaults.headers.common['Authorization'] = document.cookie.split('=')[1]
@@ -130,8 +135,13 @@ app.component('delProductModal', {
 })
 
 app.component('pagination', {
-    template: '#pagination',
     props: ['pages'],
+    template: '#pagination',
+    methods: {
+        changePage(page){
+            this.$emit('changePage', page)
+        }
+    },
 })
 
 app.mount('#app')
